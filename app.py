@@ -22,13 +22,16 @@ try:
 except Exception:
     DND_OK = False
 
-# Khi đóng gói thành .exe (PyInstaller), dùng thư mục chứa file .exe;
+# Khi đóng gói thành .exe/.app (PyInstaller), dùng thư mục chứa file thực thi;
 # còn khi chạy bằng python thì dùng thư mục chứa file app.py.
 if getattr(sys, "frozen", False):
     BASE = Path(sys.executable).parent
+    # App đã CÀI ĐẶT (Program Files / Applications) thường không cho ghi file,
+    # nên ảnh kết quả lưu vào thư mục Pictures của người dùng.
+    OUTPUT_DIR = Path.home() / "Pictures" / "GhepAnhLogoEyePlus"
 else:
     BASE = Path(__file__).parent
-OUTPUT_DIR = BASE / "output"
+    OUTPUT_DIR = BASE / "output"
 VALID_EXT = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"}
 POSITIONS = ["top-left", "top-right", "bottom-left", "bottom-right", "center"]
 
@@ -203,7 +206,7 @@ class App:
         self.status.config(text="Đã xoá danh sách.")
 
     def open_output(self):
-        OUTPUT_DIR.mkdir(exist_ok=True)
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         import subprocess, sys
         if sys.platform == "darwin":
             subprocess.run(["open", str(OUTPUT_DIR)])
@@ -221,7 +224,7 @@ class App:
             messagebox.showwarning("Chưa có ảnh", "Hãy kéo thả hoặc chọn ảnh cần chèn logo.")
             return
 
-        OUTPUT_DIR.mkdir(exist_ok=True)
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         logo_master = Image.open(logo).convert("RGBA")
         pos = self.pos.get()
         ratio = self.size.get() / 100.0
@@ -247,8 +250,21 @@ class App:
             self.open_output()
 
 
+def make_root():
+    """Tạo cửa sổ gốc. Nếu thư viện kéo-thả (tkdnd) không nạp được trên máy
+    (vd Tcl/Tk cũ), tự lùi về cửa sổ thường — app vẫn chạy, chỉ tắt kéo-thả."""
+    global DND_OK
+    if DND_OK:
+        try:
+            return TkinterDnD.Tk()
+        except Exception as e:
+            print(f"Tắt kéo-thả (không nạp được tkdnd): {e}")
+            DND_OK = False
+    return tk.Tk()
+
+
 def main():
-    root = TkinterDnD.Tk() if DND_OK else tk.Tk()
+    root = make_root()
     App(root)
     root.mainloop()
 

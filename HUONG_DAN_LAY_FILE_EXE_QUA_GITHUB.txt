@@ -1,0 +1,60 @@
+==========================================================
+   LẤY FILE .EXE QUA GITHUB (KHÔNG CẦN PYTHON)
+==========================================================
+
+Cách này để GitHub tự đúc file .exe trên máy chủ của họ.
+Bạn chỉ thao tác bằng trình duyệt, KHÔNG cài Python, KHÔNG
+dùng dòng lệnh. Làm 1 lần, sau đó muốn build lại chỉ bấm 1 nút.
+
+----------------------------------------------------------
+BƯỚC 1 — TẠO TÀI KHOẢN GITHUB (miễn phí)
+----------------------------------------------------------
+- Vào https://github.com  → Sign up → đăng ký bằng email.
+  (Nếu đã có tài khoản thì bỏ qua.)
+
+----------------------------------------------------------
+BƯỚC 2 — TẠO KHO CHỨA (REPOSITORY) MỚI
+----------------------------------------------------------
+- Góc trên bên phải bấm dấu "+"  → "New repository".
+- Repository name: ghep-anh-logo-eyeplus
+- Để Public (hoặc Private đều được) → bấm "Create repository".
+
+----------------------------------------------------------
+BƯỚC 3 — TẢI FILE DỰ ÁN LÊN
+----------------------------------------------------------
+- Trong repo vừa tạo, bấm dòng chữ "uploading an existing file"
+  (hoặc nút "Add file" > "Upload files").
+- Mở thư mục dự án này trên máy, KÉO–THẢ tất cả vào trang web.
+  QUAN TRỌNG: phải có file  app.py  và thư mục  .github
+  (chứa cấu hình build). Nếu kéo cả thư mục khó, hãy nén dự án
+  rồi giải nén, hoặc dùng GitHub Desktop.
+- Kéo xong, kéo xuống cuối trang bấm "Commit changes".
+
+  * MẸO DỄ NHẤT: cài "GitHub Desktop" (https://desktop.github.com)
+    rồi kéo cả thư mục vào — đỡ thiếu file ẩn .github.
+
+----------------------------------------------------------
+BƯỚC 4 — CHỜ GITHUB ĐÚC FILE (TỰ ĐỘNG)
+----------------------------------------------------------
+- Sau khi tải lên, mở tab "Actions" ở đầu trang repo.
+- Sẽ thấy tiến trình "Build Windows EXE" đang chạy (vòng tròn vàng).
+- Chờ ~2–4 phút tới khi thành dấu tích xanh ✔.
+
+  Nếu chưa tự chạy: bấm vào "Build Windows EXE" bên trái >
+  bấm "Run workflow".
+
+----------------------------------------------------------
+BƯỚC 5 — TẢI FILE .EXE VỀ
+----------------------------------------------------------
+- Bấm vào lần chạy có dấu tích xanh.
+- Kéo xuống mục "Artifacts" > bấm "GhepAnhLogoEyePlus-Windows".
+- Tải về file .zip, giải nén ra được:  GhepAnhLogoEyePlus.exe
+
+----------------------------------------------------------
+DÙNG TRÊN MÁY WINDOWS BẤT KỲ
+----------------------------------------------------------
+- Copy file GhepAnhLogoEyePlus.exe sang máy nào cũng được.
+- Bấm đúp là chạy, KHÔNG cần cài Python.
+- Lần đầu có thể hiện cảnh báo SmartScreen >
+  bấm "More info" > "Run anyway".
+==========================================================

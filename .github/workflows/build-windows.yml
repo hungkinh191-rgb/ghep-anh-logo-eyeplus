@@ -1,4 +1,4 @@
-name: Build Windows EXE
+name: Build Windows Installer
 
 # Tự chạy khi đẩy code lên, hoặc bấm chạy tay trong tab Actions.
 on:
@@ -23,16 +23,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller pillow tkinterdnd2
 
-      - name: Đóng gói thành .exe
+      - name: Đóng gói app bằng PyInstaller (--onedir)
         run: >
-          pyinstaller --noconfirm --onefile --windowed
+          pyinstaller --noconfirm --onedir --windowed
           --name "GhepAnhLogoEyePlus"
           --collect-all tkinterdnd2
           app.py
 
-      - name: Tải file .exe lên (Artifact)
+      - name: Cài Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Tạo bộ cài Setup.exe
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss'
+
+      - name: Tải bộ cài lên (Artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: GhepAnhLogoEyePlus-Windows
-          path: dist/GhepAnhLogoEyePlus.exe
+          name: GhepAnhLogoEyePlus-Windows-Installer
+          path: installer_out/GhepAnhLogoEyePlus-Setup.exe
           if-no-files-found: error

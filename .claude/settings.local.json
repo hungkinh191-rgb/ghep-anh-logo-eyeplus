@@ -45,7 +45,31 @@
       "Bash($HOME/.railway/bin/railway login *)",
       "Bash(pkill -f \"railway login\")",
       "Bash(python3 -m py_compile app.py)",
-      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Them GitHub Actions tu dong build file .exe Windows\")"
+      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Them GitHub Actions tu dong build file .exe Windows\")",
+      "Bash(curl -fsSL \"https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js\" -o /tmp/jszip.min.js)",
+      "Bash(python3 -)",
+      "Bash(python3 -m pip --version)",
+      "Bash(python3 -m venv --help)",
+      "Bash(python3 -c \"import PIL; print\\('PIL', PIL.__version__\\)\")",
+      "Bash(python3 -m venv .buildvenv)",
+      "Bash(.buildvenv/bin/python -m pip install --upgrade pip -q)",
+      "Bash(.buildvenv/bin/pip install *)",
+      "Bash(rm -rf build dist *.spec)",
+      "Bash(.buildvenv/bin/pyinstaller --noconfirm --windowed --name \"Ghep Anh Logo EyePlus\" --collect-all tkinterdnd2 app.py)",
+      "Bash(rm -rf dmg_stage \"GhepAnhLogoEyePlus.dmg\")",
+      "Bash(mkdir dmg_stage)",
+      "Bash(cp -R \"dist/Ghep Anh Logo EyePlus.app\" dmg_stage/)",
+      "Bash(ln -s /Applications dmg_stage/Applications)",
+      "Bash(hdiutil create *)",
+      "Bash(hdiutil detach *)",
+      "Bash(pgrep -f \"Ghep Anh Logo EyePlus\")",
+      "Bash(pkill -f \"Ghep Anh Logo EyePlus\")",
+      "Bash(timeout 6 \"dist/Ghep Anh Logo EyePlus.app/Contents/MacOS/Ghep Anh Logo EyePlus\")",
+      "Bash(\"dist/Ghep Anh Logo EyePlus.app/Contents/MacOS/Ghep Anh Logo EyePlus\")",
+      "Bash(rm -rf build dist)",
+      "Bash(.buildvenv/bin/python -)",
+      "Bash(git rm *)",
+      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Bo cai: .dmg cho Mac \\(build san\\) + Setup.exe Windows qua GitHub Actions \\(Inno Setup\\); luu ket qua vao Pictures khi da cai\")"
     ]
   }
 }

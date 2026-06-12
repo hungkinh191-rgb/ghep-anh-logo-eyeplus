@@ -3,3 +3,12 @@ __pycache__/
 .DS_Store
 input/
 output/
+
+# Thư mục/tệp build tạm
+.buildvenv/
+build/
+dist/
+dmg_stage/
+installer_out/
+*.spec
+*.dmg

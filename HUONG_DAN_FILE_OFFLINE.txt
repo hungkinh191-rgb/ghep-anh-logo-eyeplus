@@ -1,0 +1,41 @@
+==========================================================
+   FILE OFFLINE — GHÉP ẢNH LOGO EYEPLUS
+==========================================================
+
+FILE CẦN DÙNG:   GhepAnhLogoEyePlus.html   (chỉ 1 file duy nhất)
+
+Đây là 1 file chạy hoàn toàn OFFLINE trên máy:
+  - KHÔNG cần cài Python, KHÔNG cần cài gì cả.
+  - KHÔNG cần internet (mọi thứ đã nhúng sẵn trong file).
+  - KHÔNG tốn token / không gọi AI — chỉ xử lý ảnh trên máy.
+  - Ảnh không gửi đi đâu, chạy ngay trên máy người dùng.
+
+----------------------------------------------------------
+ĐEM SANG MÁY WINDOWS
+----------------------------------------------------------
+1. Copy file  GhepAnhLogoEyePlus.html  sang máy Windows
+   (qua USB, Zalo, email... đều được — chỉ 1 file ~110 KB).
+2. Bấm đúp vào file -> tự mở bằng trình duyệt có sẵn
+   (Microsoft Edge / Chrome). Mọi máy Windows đều có Edge.
+
+   * Nếu bấm đúp mở ra trang lạ: chuột phải file >
+     "Open with" (Mở bằng) > chọn Microsoft Edge hoặc Chrome.
+
+----------------------------------------------------------
+CÁCH DÙNG
+----------------------------------------------------------
+1. Kéo–thả (hoặc bấm chọn) file LOGO vào ô số 1.
+2. Kéo–thả nhiều ẢNH vào ô số 2.
+3. Chỉnh vị trí / cỡ / độ đậm / lề — xem trước bên phải.
+4. Bấm "Chèn logo & tải về":
+   - 1 ảnh  -> tải thẳng file ảnh.
+   - Nhiều ảnh -> gom thành 1 file ZIP.
+
+Ảnh tải về nằm trong thư mục "Downloads" của máy đó.
+
+----------------------------------------------------------
+CHIA SẺ CHO NGƯỜI KHÁC
+----------------------------------------------------------
+Chỉ cần gửi đúng 1 file  GhepAnhLogoEyePlus.html  cho họ.
+Ai nhận được cũng bấm đúp là dùng, không cài gì, không cần mạng.
+==========================================================
