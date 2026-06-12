@@ -25,7 +25,7 @@ PrivilegesRequiredOverridesAllowed=dialog
 Name: "vietnamese"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Tao bieu tuong tren man hinh Desktop"; GroupFlags: unchecked
+Name: "desktopicon"; Description: "Tao bieu tuong tren man hinh Desktop"; Flags: unchecked
 
 [Files]
 ; Lay toan bo thu muc PyInstaller build ra (che do --onedir)
