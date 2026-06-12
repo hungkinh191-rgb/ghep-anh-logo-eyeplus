@@ -69,7 +69,8 @@
       "Bash(rm -rf build dist)",
       "Bash(.buildvenv/bin/python -)",
       "Bash(git rm *)",
-      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Bo cai: .dmg cho Mac \\(build san\\) + Setup.exe Windows qua GitHub Actions \\(Inno Setup\\); luu ket qua vao Pictures khi da cai\")"
+      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Bo cai: .dmg cho Mac \\(build san\\) + Setup.exe Windows qua GitHub Actions \\(Inno Setup\\); luu ket qua vao Pictures khi da cai\")",
+      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Them huong dan bo cai dat\")"
     ]
   }
 }

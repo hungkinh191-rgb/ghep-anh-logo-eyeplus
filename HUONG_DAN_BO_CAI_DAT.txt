@@ -1,0 +1,59 @@
+==========================================================
+   BỘ CÀI ĐẶT — GHÉP ẢNH LOGO EYEPLUS
+==========================================================
+
+Có 2 bộ cài cho 2 hệ điều hành:
+  - Mac:     GhepAnhLogoEyePlus.dmg   (ĐÃ TẠO SẴN trong thư mục này)
+  - Windows: GhepAnhLogoEyePlus-Setup.exe  (lấy qua GitHub - xem phần dưới)
+
+Cả hai đều là app chạy độc lập:
+  - KHÔNG cần cài Python, KHÔNG cần mạng khi dùng.
+  - KHÔNG tốn token / không gọi AI — chỉ xử lý ảnh trên máy.
+  - Ảnh kết quả lưu vào:  Pictures / GhepAnhLogoEyePlus
+
+----------------------------------------------------------
+A) MAC — CÀI BẰNG FILE .DMG  (đã có sẵn)
+----------------------------------------------------------
+1. Bấm đúp  GhepAnhLogoEyePlus.dmg
+2. Cửa sổ hiện ra: KÉO icon app thả vào thư mục "Applications".
+3. Vào Launchpad / Applications, mở "Ghep Anh Logo EyePlus".
+
+   * Lần đầu macOS có thể báo "không rõ nhà phát triển":
+     -> Chuột phải vào app > Open > Open  (chỉ cần 1 lần).
+     (Hoặc: System Settings > Privacy & Security > "Open Anyway".)
+     Lý do: app chưa mua chứng chỉ ký số của Apple — vẫn an toàn.
+
+----------------------------------------------------------
+B) WINDOWS — LẤY FILE SETUP.EXE QUA GITHUB
+----------------------------------------------------------
+File .exe của Windows bắt buộc phải đúc trên Windows, nên dùng
+GitHub đúc giúp (miễn phí, không cần Python ở máy bạn).
+
+1. Tạo tài khoản tại  https://github.com  (nếu chưa có).
+2. Tạo repository mới, rồi tải toàn bộ thư mục dự án này lên
+   (nhớ có file app.py, thư mục .github và installer).
+   -> Mẹo: dùng "GitHub Desktop" kéo cả thư mục cho đỡ sót file ẩn.
+3. Mở tab "Actions" trên repo > chờ "Build Windows Installer"
+   chạy xong (dấu tích xanh, ~3–5 phút).
+4. Bấm vào lần chạy đó > mục "Artifacts" >
+   tải "GhepAnhLogoEyePlus-Windows-Installer".
+5. Giải nén được:  GhepAnhLogoEyePlus-Setup.exe
+
+   Đem Setup.exe sang máy Windows bất kỳ, bấm đúp để CÀI ĐẶT
+   như phần mềm bình thường (có trong Start Menu, có gỡ cài đặt).
+   * Lần đầu chạy có thể hiện SmartScreen >
+     "More info" > "Run anyway".
+
+----------------------------------------------------------
+CÁCH DÙNG APP (giống nhau trên cả Mac & Windows)
+----------------------------------------------------------
+1. Bấm "Chọn logo…" để chọn logo (PNG nền trong suốt đẹp nhất).
+2. Chọn / kéo-thả ảnh cần chèn (chọn được nhiều ảnh).
+3. Chỉnh Vị trí / Cỡ logo / Độ đậm.
+4. Bấm "CHÈN LOGO".
+5. Bấm "Mở thư mục kết quả" để xem ảnh đã chèn
+   (nằm trong Pictures/GhepAnhLogoEyePlus).
+
+Ghi chú: trên một số máy, tính năng kéo-thả có thể tự tắt
+(do thư viện hệ thống) — khi đó vẫn bấm "Thêm ảnh…" để chọn.
+==========================================================
