@@ -1,0 +1,2 @@
+# Không cần thư viện ngoài — server dùng thư viện chuẩn của Python.
+# File này chỉ để Railway/Nixpacks nhận diện đây là ứng dụng Python.

@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Fb__ads_get_ad_entities",
+      "Bash(npm --version)",
+      "Read(//Users/tungteaz/.claude/**)",
+      "Read(//Users/tungteaz/.npm-global/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/tungteaz/**)",
+      "Bash(curl -fsSL https://claude.ai/install.sh)",
+      "Bash(bash)",
+      "mcp__claude_ai_Fb__ads_get_ad_accounts",
+      "Bash(brew --version)",
+      "Bash(curl -sL \"https://karabiner-elements.pqrs.org/docs/getting-started/installation/\")",
+      "Bash(curl -sL \"https://api.github.com/repos/pqrs-org/Karabiner-Elements/releases/latest\")",
+      "Bash(curl -L -o ~/Downloads/Karabiner-Elements-16.0.0.dmg \"https://github.com/pqrs-org/Karabiner-Elements/releases/download/v16.0.0/Karabiner-Elements-16.0.0.dmg\")",
+      "Bash(hdiutil attach *)",
+      "Read(//Volumes/**)",
+      "Bash(open *)",
+      "Bash(python3 -m pip install --user --quiet Pillow)",
+      "Bash(python3 -c \"import PIL; print\\('Pillow đã cài:', PIL.__version__\\)\")",
+      "Bash(chmod +x start_watch.command)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 watch_logo.py)",
+      "Bash(chmod +x start_watch.command run_once.command)",
+      "Bash(./run_once.command)",
+      "Bash(python3 -c \"import PIL; print\\('Pillow', PIL.__version__\\)\")",
+      "Bash(python3 -c \"import tkinter; print\\('tkinter OK', tkinter.TkVersion\\)\")",
+      "Bash(python3 -c \"import tkinterdnd2; print\\('tkinterdnd2 OK'\\)\")",
+      "Bash(chmod +x mo_app.command)",
+      "Bash(python3 -m pip install --user --quiet tkinterdnd2)",
+      "Bash(python3 -c \"import tkinterdnd2; print\\('tkinterdnd2 cai OK'\\)\")",
+      "Bash(awk '{for\\(i=11;i<=NF;i++\\) printf \"%s \", $i; print \"\"}')",
+      "Bash(git --version)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git -c user.email=\"hungnv.ep@gmail.com\" -c user.name=\"EyePlus\" commit -q -m \"Ghép Ảnh Logo EyePlus - web tool deploy lên Railway\")"
+    ]
+  }
+}

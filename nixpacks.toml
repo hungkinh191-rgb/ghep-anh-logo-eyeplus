@@ -1,0 +1,5 @@
+# Cấu hình build cho Railway (Nixpacks)
+providers = ["python"]
+
+[start]
+cmd = "python server.py"

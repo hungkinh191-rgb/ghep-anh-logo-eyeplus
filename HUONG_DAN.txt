@@ -1,0 +1,64 @@
+========================================================
+   WORKFLOW TỰ ĐỘNG CHÈN LOGO CHO ẢNH
+========================================================
+
+Bộ này chèn logo (watermark) cho ảnh hàng loạt — copy cả thư mục
+sang máy khác là dùng được. Lần đầu chạy sẽ tự cài thư viện cần thiết.
+
+--------------------------------------------------------
+YÊU CẦU (chỉ 1 lần cho mỗi máy)
+--------------------------------------------------------
+- Máy cần có Python 3. Kiểm tra: mở Terminal/CMD gõ  python3 --version
+  Nếu chưa có, tải tại: https://www.python.org/downloads/
+  (Windows: khi cài NHỚ tích "Add Python to PATH")
+- Cần mạng internet ở lần chạy ĐẦU TIÊN (để tự cài thư viện Pillow).
+
+--------------------------------------------------------
+CHUẨN BỊ
+--------------------------------------------------------
+1. Đặt file logo của bạn vào thư mục này, tên:  logo.png
+   (Nên dùng PNG nền trong suốt để đẹp nhất)
+2. Bỏ ảnh cần chèn logo vào thư mục:  input/
+
+--------------------------------------------------------
+CÁCH CHẠY
+--------------------------------------------------------
+>> Trên Mac: nhấn đúp file
+     - start_watch.command   = TỰ ĐỘNG theo dõi (thả ảnh vào input/ là chèn ngay)
+     - run_once.command      = chèn 1 lần cho tất cả ảnh đang có trong input/
+
+>> Trên Windows: nhấn đúp file
+     - start_watch_WINDOWS.bat
+     - run_once_WINDOWS.bat
+
+Ảnh kết quả nằm trong thư mục:  output/
+(Ảnh gốc trong input/ KHÔNG bị thay đổi)
+
+* Lần đầu trên Mac nếu báo "không rõ nguồn gốc":
+  chuột phải vào file .command > Open > Open (chỉ cần 1 lần).
+
+--------------------------------------------------------
+CHỈNH VỊ TRÍ / CỠ / ĐỘ MỜ LOGO
+--------------------------------------------------------
+Mở file  add_logo.py  bằng trình soạn thảo, sửa phần CẤU HÌNH ở đầu:
+
+  POSITION   = "top-left"    # top-left, top-right, bottom-left, bottom-right, center
+  LOGO_RATIO = 0.10          # cỡ logo = 10% chiều rộng ảnh (0.20 = 20%)
+  OPACITY    = 1.0           # 1.0 = rõ nét, 0.5 = mờ một nửa
+  MARGIN     = 0.03          # khoảng cách tới mép = 3%
+
+Cả 2 chế độ (chạy 1 lần và tự động) đều dùng chung cấu hình này.
+
+--------------------------------------------------------
+CÁC FILE TRONG GÓI
+--------------------------------------------------------
+  add_logo.py              - bộ xử lý chính + cấu hình
+  watch_logo.py            - chế độ tự động theo dõi
+  start_watch.command      - Mac: bật tự động theo dõi
+  run_once.command         - Mac: chạy 1 lần
+  start_watch_WINDOWS.bat  - Windows: bật tự động theo dõi
+  run_once_WINDOWS.bat     - Windows: chạy 1 lần
+  input/                   - bỏ ảnh gốc vào đây
+  output/                  - ảnh đã chèn logo xuất ra đây
+  logo.png                 - logo của bạn (tự thêm)
+========================================================

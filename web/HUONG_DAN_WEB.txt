@@ -1,0 +1,51 @@
+==========================================================
+   TOOL CHÈN LOGO ONLINE (chạy trong trình duyệt)
+==========================================================
+
+File chính:  web/index.html
+
+Tool này chạy 100% trong trình duyệt:
+- Người dùng KHÔNG cần cài Python hay bất cứ gì.
+- Ảnh KHÔNG gửi lên mạng — xử lý ngay trên máy người dùng (an toàn, riêng tư).
+- Dùng được cả khi không có mạng (trừ lần đầu cần tải thư viện nén ZIP).
+
+----------------------------------------------------------
+CÁCH DÙNG (cho người dùng cuối)
+----------------------------------------------------------
+1. Mở file index.html (hoặc mở link nếu đã đưa lên web).
+2. Kéo–thả file LOGO vào ô số 1 (nên dùng PNG nền trong suốt).
+3. Kéo–thả 1 hoặc nhiều ẢNH vào ô số 2.
+4. Chỉnh vị trí / cỡ / độ đậm / lề ở ô số 3 (xem trước bên phải).
+5. Bấm "Chèn logo & tải về":
+   - 1 ảnh  -> tải thẳng file ảnh.
+   - Nhiều ảnh -> gom thành 1 file ZIP.
+
+----------------------------------------------------------
+CÁCH CHIA SẺ CHO MỌI NGƯỜI
+----------------------------------------------------------
+CÁCH 1 — Gửi thẳng file:
+   Gửi file index.html (qua Zalo/email/USB). Người nhận bấm đúp là mở được.
+
+CÁCH 2 — Đưa lên web để có 1 ĐƯỜNG LINK (khuyên dùng):
+   Miễn phí, ai có link là dùng được, không cần cài gì.
+
+   • GitHub Pages:
+     - Tạo repo trên github.com, upload file index.html.
+     - Settings > Pages > chọn nhánh main > Save.
+     - Vài phút sau có link dạng:  https://<tên>.github.io/<repo>/
+
+   • Netlify Drop (nhanh nhất):
+     - Vào  https://app.netlify.com/drop
+     - Kéo cả thư mục "web" thả vào -> có link ngay.
+
+   • Cloudflare Pages / Vercel: tương tự, kéo thư mục lên là xong.
+
+----------------------------------------------------------
+LƯU Ý
+----------------------------------------------------------
+- Phần gom ZIP dùng thư viện JSZip tải từ internet (CDN). Nếu muốn dùng
+  hoàn toàn offline, tải file jszip.min.js về cùng thư mục và sửa dòng
+  <script src="..."> trong index.html trỏ tới file local. Nếu không có
+  mạng và chưa tải được JSZip, tool vẫn chạy nhưng với nhiều ảnh sẽ tải
+  từng file thay vì gói ZIP.
+==========================================================

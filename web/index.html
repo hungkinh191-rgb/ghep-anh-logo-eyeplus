@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghép Ảnh Logo EyePlus</title>
+<style>
+  :root{
+    --bg:#f4f6fb; --card:#fff; --ink:#1f2733; --muted:#6b7785;
+    --line:#e3e8f0; --brand:#2563eb; --brand-d:#1d4ed8; --ok:#16a34a; --ok-d:#15803d;
+    --drop:#eef3ff; --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;padding:22px 18px;text-align:center}
+  header h1{margin:0;font-size:22px}
+  header p{margin:6px 0 0;opacity:.9;font-size:13px}
+  .wrap{max-width:1080px;margin:0 auto;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+       background:var(--brand);color:#fff;font-size:12px;font-weight:700;flex:none}
+  .drop{border:2px dashed #b9c6dd;border-radius:12px;background:var(--drop);padding:22px;text-align:center;
+        cursor:pointer;transition:.15s;color:var(--brand)}
+  .drop:hover,.drop.over{background:#e2ebff;border-color:var(--brand)}
+  .drop .big{font-size:14px;font-weight:700}
+  .drop .sub{font-size:12px;color:var(--muted);margin-top:4px}
+  .logo-prev{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .logo-prev img{max-height:54px;max-width:120px;border:1px solid var(--line);border-radius:8px;
+                 background:repeating-conic-gradient(#eee 0% 25%,#fff 0% 50%) 50%/16px 16px;padding:4px}
+  .logo-prev .name{font-size:13px;color:var(--muted);word-break:break-all}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;margin-top:12px;max-height:230px;overflow:auto}
+  .thumb{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;aspect-ratio:1;background:#f0f2f7}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .x{position:absolute;top:2px;right:2px;width:20px;height:20px;border:none;border-radius:50%;
+            background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:20px;cursor:pointer;padding:0}
+  .row{display:flex;align-items:center;gap:10px;margin:14px 0}
+  .row label{width:78px;font-size:13px;color:var(--muted);flex:none}
+  .row input[type=range]{flex:1}
+  .row .val{width:54px;text-align:right;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+  .posgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:120px}
+  .posgrid button{aspect-ratio:1;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;
+                  font-size:11px;color:var(--muted);transition:.12s}
+  .posgrid button:hover{border-color:var(--brand)}
+  .posgrid button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+  select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
+  .preview-box{border:1px solid var(--line);border-radius:10px;background:repeating-conic-gradient(#eee 0% 25%,#fff 0% 50%) 50%/22px 22px;
+               display:flex;align-items:center;justify-content:center;min-height:260px;overflow:hidden;padding:8px}
+  .preview-box canvas{max-width:100%;max-height:420px;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .preview-box .empty{color:var(--muted);font-size:13px;text-align:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:10px;
+       font-weight:700;cursor:pointer;padding:13px 16px;font-size:14px;width:100%}
+  .btn-go{background:var(--ok);color:#fff}
+  .btn-go:hover{background:var(--ok-d)}
+  .btn-go:disabled{background:#9bbfa6;cursor:not-allowed}
+  .btn-sec{background:#eef1f6;color:var(--ink);margin-top:8px}
+  .btn-sec:hover{background:#e3e8f0}
+  .status{margin-top:10px;font-size:13px;color:var(--muted);text-align:center;min-height:18px}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px}
+  .bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:10px;display:none}
+  .bar i{display:block;height:100%;width:0;background:var(--ok);transition:.2s}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 18px 28px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🖼️ Ghép Ảnh Logo EyePlus</h1>
+  <p>Kéo–thả ảnh, chọn logo, bấm chèn. Mọi xử lý chạy ngay trên máy bạn — ảnh không gửi đi đâu cả.</p>
+</header>
+
+<div class="wrap">
+  <!-- CỘT TRÁI: thiết lập -->
+  <div>
+    <div class="card">
+      <h2><span class="num">1</span> Chọn logo</h2>
+      <div class="drop" id="logoDrop">
+        <div class="big">Kéo logo vào đây hoặc bấm để chọn</div>
+        <div class="sub">Nên dùng PNG nền trong suốt</div>
+      </div>
+      <input type="file" id="logoInput" accept="image/*" hidden>
+      <div class="logo-prev" id="logoPrev" style="display:none">
+        <img id="logoImg" alt="logo">
+        <span class="name" id="logoName"></span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2><span class="num">2</span> Thêm ảnh cần chèn</h2>
+      <div class="drop" id="imgDrop">
+        <div class="big">Kéo nhiều ảnh vào đây hoặc bấm để chọn</div>
+        <div class="sub">JPG, PNG, WEBP… — chọn được nhiều ảnh cùng lúc</div>
+      </div>
+      <input type="file" id="imgInput" accept="image/*" multiple hidden>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="hint" id="imgCount">Chưa có ảnh nào.</div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2><span class="num">3</span> Tuỳ chỉnh</h2>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:6px">Vị trí logo</div>
+          <div class="posgrid" id="posGrid"></div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div class="row">
+            <label>Cỡ logo</label>
+            <input type="range" id="size" min="3" max="50" value="12">
+            <span class="val" id="sizeVal">12%</span>
+          </div>
+          <div class="row">
+            <label>Độ đậm</label>
+            <input type="range" id="opacity" min="10" max="100" value="100">
+            <span class="val" id="opacityVal">100%</span>
+          </div>
+          <div class="row">
+            <label>Lề cách mép</label>
+            <input type="range" id="margin" min="0" max="15" value="3">
+            <span class="val" id="marginVal">3%</span>
+          </div>
+          <div class="row">
+            <label>Lưu dạng</label>
+            <select id="format">
+              <option value="auto">Giữ định dạng gốc</option>
+              <option value="jpeg">JPG (nhẹ)</option>
+              <option value="png">PNG (giữ trong suốt)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CỘT PHẢI: xem trước + xuất -->
+  <div>
+    <div class="card">
+      <h2>👁️ Xem trước</h2>
+      <div class="preview-box" id="previewBox">
+        <div class="empty">Thêm logo và ít nhất 1 ảnh để xem trước.</div>
+      </div>
+      <div class="hint" id="previewHint"></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>⬇️ Xuất kết quả</h2>
+      <button class="btn btn-go" id="goBtn" disabled>▶ Chèn logo &amp; tải về</button>
+      <div class="bar" id="bar"><i></i></div>
+      <div class="status" id="status"></div>
+      <div class="hint">Nhiều ảnh sẽ được gom thành 1 file ZIP để tải 1 lần. Một ảnh thì tải thẳng file ảnh.</div>
+    </div>
+  </div>
+</div>
+
+<footer>Tool chạy 100% trong trình duyệt • Có thể dùng offline • Chia sẻ bằng cách gửi file này hoặc đưa lên web</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+
+  // ---- Trạng thái ----
+  let logoImg = null;        // HTMLImageElement của logo
+  let logoName = "";
+  const images = [];         // { name, img, type }
+  let position = "top-left";
+  let previewIdx = 0;
+
+  // ---- Vị trí (lưới 3x3) ----
+  const POSITIONS = [
+    ["top-left","↖"],["top-center","↑"],["top-right","↗"],
+    ["center-left","←"],["center","●"],["center-right","→"],
+    ["bottom-left","↙"],["bottom-center","↓"],["bottom-right","↘"],
+  ];
+  const posGrid = $("posGrid");
+  POSITIONS.forEach(([key,sym])=>{
+    const b=document.createElement("button");
+    b.textContent=sym; b.dataset.pos=key; b.title=key;
+    if(key===position) b.classList.add("on");
+    b.onclick=()=>{position=key;[...posGrid.children].forEach(c=>c.classList.toggle("on",c.dataset.pos===key));renderPreview();};
+    posGrid.appendChild(b);
+  });
+
+  // ---- Helpers nạp ảnh ----
+  function fileToImage(file){
+    return new Promise((res,rej)=>{
+      const img=new Image();
+      const url=URL.createObjectURL(file);
+      img.onload=()=>{res(img);};
+      img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("Không đọc được ảnh"));};
+      img.src=url;
+    });
+  }
+  const isImage = f => f && f.type.startsWith("image/");
+
+  // ---- Logo ----
+  async function setLogo(file){
+    if(!isImage(file)) return;
+    logoImg = await fileToImage(file);
+    logoName = file.name;
+    $("logoImg").src = logoImg.src;
+    $("logoName").textContent = file.name;
+    $("logoPrev").style.display = "flex";
+    refreshGo(); renderPreview();
+  }
+
+  // ---- Danh sách ảnh ----
+  async function addImages(fileList){
+    const files=[...fileList].filter(isImage);
+    for(const f of files){
+      try{
+        const img=await fileToImage(f);
+        images.push({name:f.name,img,type:f.type});
+      }catch(e){/* bỏ qua ảnh lỗi */}
+    }
+    renderThumbs(); refreshGo(); renderPreview();
+  }
+  function renderThumbs(){
+    const box=$("thumbs"); box.innerHTML="";
+    images.forEach((it,i)=>{
+      const d=document.createElement("div"); d.className="thumb";
+      const im=document.createElement("img"); im.src=it.img.src; im.alt=it.name;
+      const x=document.createElement("button"); x.className="x"; x.textContent="×"; x.title="Xoá";
+      x.onclick=()=>{images.splice(i,1);if(previewIdx>=images.length)previewIdx=0;renderThumbs();refreshGo();renderPreview();};
+      im.onclick=()=>{previewIdx=i;renderPreview();};
+      d.appendChild(im); d.appendChild(x); box.appendChild(d);
+    });
+    $("imgCount").textContent = images.length ? `${images.length} ảnh đã thêm — bấm 1 ảnh để xem trước.` : "Chưa có ảnh nào.";
+  }
+
+  // ---- Tính toạ độ & vẽ ----
+  function computeLayout(iw,ih){
+    const ratio = +$("size").value/100;
+    const marginPct = +$("margin").value/100;
+    const lw = Math.max(1, Math.round(iw*ratio));
+    const lh = Math.max(1, Math.round(logoImg.height * lw / logoImg.width));
+    const m = Math.round(iw*marginPct);
+    const left=m, right=iw-lw-m, hcenter=Math.round((iw-lw)/2);
+    const top=m, bottom=ih-lh-m, vcenter=Math.round((ih-lh)/2);
+    const X={left,center:hcenter,right}, Y={top,center:vcenter,bottom};
+    const parts=position.split("-"); // vd: top-left, center, bottom-center
+    let vy,hx;
+    if(position==="center"){vy="center";hx="center";}
+    else{vy=parts[0];hx=parts[1];}
+    return {x:X[hx],y:Y[vy],lw,lh};
+  }
+
+  function drawTo(canvas, item){
+    const {img}=item;
+    const iw=img.naturalWidth, ih=img.naturalHeight;
+    canvas.width=iw; canvas.height=ih;
+    const ctx=canvas.getContext("2d");
+    ctx.clearRect(0,0,iw,ih);
+    ctx.drawImage(img,0,0,iw,ih);
+    if(logoImg){
+      const {x,y,lw,lh}=computeLayout(iw,ih);
+      ctx.globalAlpha = +$("opacity").value/100;
+      ctx.drawImage(logoImg,x,y,lw,lh);
+      ctx.globalAlpha=1;
+    }
+  }
+
+  function renderPreview(){
+    const box=$("previewBox");
+    if(!images.length || !logoImg){
+      box.innerHTML='<div class="empty">Thêm logo và ít nhất 1 ảnh để xem trước.</div>';
+      $("previewHint").textContent="";
+      return;
+    }
+    const item=images[Math.min(previewIdx,images.length-1)];
+    const canvas=document.createElement("canvas");
+    drawTo(canvas,item);
+    box.innerHTML=""; box.appendChild(canvas);
+    $("previewHint").textContent = `Xem trước: ${item.name} (${item.img.naturalWidth}×${item.img.naturalHeight})`;
+  }
+
+  // ---- Xuất file ----
+  function pickFormat(type){
+    const sel=$("format").value;
+    if(sel==="jpeg") return {mime:"image/jpeg",ext:"jpg"};
+    if(sel==="png")  return {mime:"image/png",ext:"png"};
+    // auto: PNG giữ trong suốt, còn lại JPG
+    if(type==="image/png"||type==="image/webp") return {mime:"image/png",ext:"png"};
+    return {mime:"image/jpeg",ext:"jpg"};
+  }
+  function baseName(name){const i=name.lastIndexOf(".");return i>0?name.slice(0,i):name;}
+  function canvasToBlob(canvas,mime,q){
+    return new Promise(res=>canvas.toBlob(b=>res(b),mime,q));
+  }
+  function downloadBlob(blob,filename){
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download=filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  }
+
+  async function run(){
+    if(!logoImg || !images.length) return;
+    const go=$("goBtn"), bar=$("bar"), barI=bar.querySelector("i");
+    go.disabled=true; bar.style.display="block"; barI.style.width="0";
+    const useZip = images.length>1 && typeof JSZip!=="undefined";
+    const zip = useZip ? new JSZip() : null;
+    const canvas=document.createElement("canvas");
+    let done=0;
+
+    for(const item of images){
+      drawTo(canvas,item);
+      const {mime,ext}=pickFormat(item.type);
+      const q = mime==="image/jpeg" ? 0.95 : undefined;
+      const blob=await canvasToBlob(canvas,mime,q);
+      const outName=`${baseName(item.name)}_logo.${ext}`;
+      if(zip){ zip.file(outName, blob); }
+      else { downloadBlob(blob,outName); }   // 1 ảnh, hoặc nhiều ảnh khi không có ZIP -> tải từng file
+      done++; barI.style.width=(done/images.length*100)+"%";
+      $("status").textContent=`Đang xử lý ${done}/${images.length}…`;
+      await new Promise(r=>setTimeout(r));   // nhường UI vẽ lại
+    }
+
+    if(zip){
+      $("status").textContent="Đang nén ZIP…";
+      const content=await zip.generateAsync({type:"blob"});
+      downloadBlob(content,"anh_da_chen_logo.zip");
+    }
+    $("status").textContent=`🎉 Xong! Đã chèn logo ${images.length} ảnh.`;
+    setTimeout(()=>{bar.style.display="none";},800);
+    go.disabled=false;
+  }
+
+  // ---- Gắn sự kiện kéo-thả ----
+  function bindDrop(dropEl,inputEl,onFiles){
+    dropEl.onclick=()=>inputEl.click();
+    inputEl.onchange=()=>{if(inputEl.files.length)onFiles(inputEl.files);inputEl.value="";};
+    ["dragenter","dragover"].forEach(ev=>dropEl.addEventListener(ev,e=>{e.preventDefault();dropEl.classList.add("over");}));
+    ["dragleave","drop"].forEach(ev=>dropEl.addEventListener(ev,e=>{e.preventDefault();dropEl.classList.remove("over");}));
+    dropEl.addEventListener("drop",e=>{if(e.dataTransfer.files.length)onFiles(e.dataTransfer.files);});
+  }
+  bindDrop($("logoDrop"),$("logoInput"),fl=>setLogo(fl[0]));
+  bindDrop($("imgDrop"),$("imgInput"),addImages);
+
+  // Cho phép thả ảnh vào bất cứ đâu trên trang (vào danh sách ảnh)
+  window.addEventListener("dragover",e=>e.preventDefault());
+  window.addEventListener("drop",e=>e.preventDefault());
+
+  // ---- Slider ----
+  function bindSlider(id,fmt){
+    const el=$(id), out=$(id+"Val");
+    const upd=()=>{out.textContent=fmt(el.value);renderPreview();};
+    el.oninput=upd; upd();
+  }
+  bindSlider("size",v=>v+"%");
+  bindSlider("opacity",v=>v+"%");
+  bindSlider("margin",v=>v+"%");
+  $("format").onchange=renderPreview;
+
+  function refreshGo(){ $("goBtn").disabled = !(logoImg && images.length); }
+  $("goBtn").onclick=run;
+})();
+</script>
+</body>
+</html>
