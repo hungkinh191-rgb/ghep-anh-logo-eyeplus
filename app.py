@@ -9,6 +9,7 @@ Mở app lên → kéo ảnh thả vào cửa sổ (hoặc bấm "Chọn ảnh")
 Chạy:  python3 app.py     — hoặc nhấn đúp  mo_app.command (Mac) / mo_app_WINDOWS.bat (Windows)
 """
 
+import sys
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -21,7 +22,12 @@ try:
 except Exception:
     DND_OK = False
 
-BASE = Path(__file__).parent
+# Khi đóng gói thành .exe (PyInstaller), dùng thư mục chứa file .exe;
+# còn khi chạy bằng python thì dùng thư mục chứa file app.py.
+if getattr(sys, "frozen", False):
+    BASE = Path(sys.executable).parent
+else:
+    BASE = Path(__file__).parent
 OUTPUT_DIR = BASE / "output"
 VALID_EXT = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff"}
 POSITIONS = ["top-left", "top-right", "bottom-left", "bottom-right", "center"]

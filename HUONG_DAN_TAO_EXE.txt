@@ -1,0 +1,55 @@
+==========================================================
+   TẠO FILE .EXE (APP WINDOWS) — GHÉP ẢNH LOGO EYEPLUS
+==========================================================
+
+Mục tiêu: có 1 file .exe chạy độc lập, copy sang máy Windows
+nào cũng dùng được, KHÔNG cần cài Python.
+
+----------------------------------------------------------
+BƯỚC 1 — CHUẨN BỊ (chỉ làm 1 lần, trên 1 máy WINDOWS)
+----------------------------------------------------------
+Cần 1 máy chạy Windows có:
+  - Python 3  (tải tại https://www.python.org/downloads/ ,
+    khi cài NHỚ tích "Add Python to PATH")
+  - Mạng internet (chỉ cần ở lần đúc đầu tiên)
+
+Copy NGUYÊN thư mục dự án này sang máy Windows đó
+(quan trọng: phải có file app.py và TAO_FILE_EXE_WINDOWS.bat).
+
+----------------------------------------------------------
+BƯỚC 2 — ĐÚC FILE .EXE
+----------------------------------------------------------
+Bấm đúp vào file:   TAO_FILE_EXE_WINDOWS.bat
+
+Nó sẽ tự động:
+  1. Cài công cụ PyInstaller, Pillow, tkinterdnd2
+  2. Đóng gói app.py thành 1 file .exe duy nhất
+Chờ khoảng 1–2 phút.
+
+Xong sẽ có file:   dist\GhepAnhLogoEyePlus.exe
+
+----------------------------------------------------------
+BƯỚC 3 — ĐEM ĐI DÙNG TRÊN MÁY KHÁC
+----------------------------------------------------------
+Copy file  dist\GhepAnhLogoEyePlus.exe  sang máy Windows bất kỳ.
+Bấm đúp là chạy — KHÔNG cần cài Python.
+
+Cách dùng app:
+  - Bấm "Chọn logo…" để chọn logo (hoặc để sẵn file logo.png
+    cạnh file .exe thì app tự nhận).
+  - Kéo–thả (hoặc bấm chọn) ảnh cần chèn.
+  - Chỉnh vị trí / cỡ / độ đậm rồi bấm "CHÈN LOGO".
+  - Ảnh kết quả nằm trong thư mục  output/  (cạnh file .exe).
+
+----------------------------------------------------------
+LƯU Ý
+----------------------------------------------------------
+- Lần đầu mở .exe, Windows SmartScreen có thể cảnh báo
+  "Windows protected your PC" (vì file chưa ký số). Bấm
+  "More info" > "Run anyway" để chạy. Đây là điều bình thường
+  với file .exe tự tạo.
+- Muốn app có icon riêng: đặt file icon.ico cạnh app.py, rồi
+  sửa file .bat thêm tham số:  --icon "icon.ico"
+- Nếu kéo–thả không hoạt động trên 1 máy nào đó, vẫn bấm nút
+  "Thêm ảnh…" để chọn ảnh bình thường.
+==========================================================
