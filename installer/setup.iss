@@ -12,7 +12,7 @@ AppPublisher=EyePlus
 DefaultDirName={autopf}\GhepAnhLogoEyePlus
 DefaultGroupName=Ghep Anh Logo EyePlus
 DisableProgramGroupPage=yes
-OutputDir=installer_out
+OutputDir=..\installer_out
 OutputBaseFilename=GhepAnhLogoEyePlus-Setup
 Compression=lzma2
 SolidCompression=yes
@@ -29,7 +29,7 @@ Name: "desktopicon"; Description: "Tao bieu tuong tren man hinh Desktop"; Flags:
 
 [Files]
 ; Lay toan bo thu muc PyInstaller build ra (che do --onedir)
-Source: "dist\GhepAnhLogoEyePlus\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: "..\dist\GhepAnhLogoEyePlus\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Ghep Anh Logo EyePlus"; Filename: "{app}\{#ExeName}"
