@@ -1,0 +1,21 @@
+# Binary nang & file tao ra khi build (Action se tu tai/tao lai)
+bin/ffmpeg
+bin/ffmpeg.exe
+bin/font.ttf
+cache/
+output/
+dist/
+build/
+*.spec
+*.zip
+ff/
+ff.zip
+
+# Du lieu nguoi dung (clip, nhac, logo, cau chu)
+input/bodies/*
+input/music/*
+input/hooks/*
+input/ctas/*
+input/logo.png
+input/texts.txt
+!input/**/.gitkeep
