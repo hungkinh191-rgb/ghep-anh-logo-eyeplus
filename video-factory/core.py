@@ -95,7 +95,7 @@ def normalize(src, per_clip_seconds=None, gpu=False):
 def concat(clips, dst):
     """Noi cac clip DA CHUAN HOA bang concat demuxer (copy = rat nhanh)."""
     lst = CACHE / f"concat_{hashlib.md5(str(clips).encode()).hexdigest()[:12]}.txt"
-    lst.write_text("".join(f"file '{Path(c).resolve()}'\n" for c in clips))
+    lst.write_text("".join(f"file '{Path(c).resolve().as_posix()}'\n" for c in clips))
     run(["-f", "concat", "-safe", "0", "-i", str(lst), "-c", "copy", str(dst)])
     lst.unlink(missing_ok=True)
     return dst
@@ -154,16 +154,24 @@ _LOGO_POS = {
 }
 
 
-def _esc_path(p):
-    return str(p).replace("\\", "/").replace("'", "\\'")
+def _ensure_font_in_cache():
+    """Copy font vao CACHE de drawtext dung TEN FILE (tranh loi duong dan
+    co dau ':' o dia C: tren Windows)."""
+    dst = CACHE / "font.ttf"
+    if not dst.exists():
+        import shutil
+        shutil.copyfile(FONT, dst)
+    return dst
 
 
 def _drawtext(text, pos="bottom", size=64, color="white", box=True, idx=0):
-    """Tao filter drawtext, ghi text ra file (tranh loi escape tieng Viet)."""
+    """Tao filter drawtext. Dung TEN FILE (font.ttf, txt_*.txt) -> ffmpeg phai
+    chay voi cwd=CACHE. Tranh hoan toan loi duong dan tuyet doi tren Windows."""
+    _ensure_font_in_cache()
     tf = CACHE / f"txt_{hashlib.md5((text + str(idx) + pos).encode()).hexdigest()[:12]}.txt"
     tf.write_text(text, encoding="utf-8")
     y = _POS.get(pos, _POS["bottom"])
-    expr = (f"drawtext=fontfile='{_esc_path(FONT)}':textfile='{_esc_path(tf)}'"
+    expr = (f"drawtext=fontfile=font.ttf:textfile={tf.name}"
             f":expansion=none:fontcolor={color}:fontsize={size}:x=(w-text_w)/2:y={y}"
             f":line_spacing=12:borderw=3:bordercolor=black@0.8")
     if box:
@@ -229,7 +237,8 @@ def render(base_video, out, music=None, music_volume=0.8, keep_original=True,
                      "-map", f"[{vlabel}]", "-map", amap]
     args += venc(gpu, bitrate)
     args += ["-c:a", "aac", "-b:a", "192k", "-shortest", str(out)]
-    run(args)
+    # chay trong CACHE de drawtext doc font.ttf / txt_*.txt theo ten file (an toan tren Windows)
+    run(args, cwd=str(CACHE))
     return out
 
 

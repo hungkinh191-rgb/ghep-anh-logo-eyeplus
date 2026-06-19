@@ -50,9 +50,9 @@ def run_batch(o):
     STATE.update(running=True, done=0, total=o["count"], msg="Bat dau...")
     out_dir = OUT / f"dot-{_tag()}"
     STATE["out"] = str(out_dir)
-    ok = False
+    results = []
     try:
-        batch.produce_batch(
+        results = batch.produce_batch(
             DIRS["bodies"], out_dir,
             music_dir=DIRS["music"] if o["music"] else None,
             count=o["count"], clips_per_video=o["clips"],
@@ -67,11 +67,10 @@ def run_batch(o):
             transition=o.get("transition", "none"), trans_dur=o.get("transdur", 0.5),
             progress=lambda d, t, m: STATE.update(done=d, total=t, msg=m),
         )
-        ok = True
     except Exception as e:
         STATE.update(msg=f"LOI: {str(e)[:300]}")
-    # Tu don nguon vao sau khi san xuat xong (neu bat) -> dem ve 0
-    if ok and o.get("autoclear"):
+    # CHI tu don nguon khi THUC SU co video ra (tranh xoa nham khi loi)
+    if results and o.get("autoclear"):
         n = clear_inputs(include_logo=True)
         STATE["msg"] = STATE["msg"] + f" · Da don {n} file nguon + logo (ve 0)"
     STATE["running"] = False
@@ -325,15 +324,44 @@ class Handler(BaseHTTPRequestHandler):
         return self._send(200, json.dumps({"saved": saved}))
 
 
+def open_as_app(url):
+    """Mo giao dien dang APP (cua so rieng, khong co thanh trinh duyet).
+    Uu tien Edge/Chrome che do --app; neu khong co thi mo tab thuong."""
+    if os.name == "nt":
+        candidates = [
+            r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+            r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        ]
+        for exe in candidates:
+            if os.path.exists(exe):
+                try:
+                    subprocess.Popen([exe, f"--app={url}", "--window-size=900,1000"])
+                    return
+                except Exception:
+                    pass
+    elif sys.platform == "darwin":
+        # Chrome che do app neu co; khong thi mo trinh duyet mac dinh
+        chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        if os.path.exists(chrome):
+            try:
+                subprocess.Popen([chrome, f"--app={url}"])
+                return
+            except Exception:
+                pass
+    webbrowser.open(url)
+
+
 def main():
     url = f"http://127.0.0.1:{PORT}"
     print("=" * 52)
     print("  VIDEO FACTORY dang chay!")
-    print(f"  Giao dien da mo trong trinh duyet: {url}")
+    print(f"  Giao dien: {url}")
     print("  >> DE TAT: dong cua so (mau den) nay lai. <<")
     print("=" * 52)
     try:
-        webbrowser.open(url)
+        open_as_app(url)
     except Exception:
         pass
     try:

@@ -127,6 +127,7 @@ def produce_batch(pool_dir, out_dir, music_dir=None, count=20,
         return out
 
     results = []
+    errors = []
     emit(0, count, "Bat dau san xuat...")
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {ex.submit(make, j): j for j in jobs}
@@ -136,8 +137,14 @@ def produce_batch(pool_dir, out_dir, music_dir=None, count=20,
                 results.append(str(fut.result()))
                 emit(done, count, f"Xong {done}/{count}")
             except Exception as e:
+                errors.append(str(e))
                 emit(done, count, f"Loi 1 video: {str(e)[:200]}")
-    emit(count, count, f"HOAN TAT: {len(results)} video tai {out_dir}")
+    if results:
+        emit(count, count, f"HOAN TAT: {len(results)} video tai {out_dir}")
+    else:
+        # Khong tao duoc video nao -> giu nguyen loi de chan doan, KHONG don nguon
+        err = errors[0][-400:] if errors else "khong ro nguyen nhan"
+        emit(count, count, f"LOI: 0 video. Chi tiet: {err}")
     return results
 
 
