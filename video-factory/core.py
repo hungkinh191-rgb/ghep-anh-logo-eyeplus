@@ -13,10 +13,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Phan biet chay tu ma nguon hay tu file .exe (PyInstaller).
+# Phan biet chay tu ma nguon hay tu file dong goi (PyInstaller .exe / .app).
 if getattr(sys, "frozen", False):
-    BUNDLE = Path(sys._MEIPASS)                       # tai nguyen kem theo (ffmpeg, font)
-    ROOT = Path(sys.executable).resolve().parent      # du lieu (input/output/cache) ben canh .exe
+    BUNDLE = Path(sys._MEIPASS)                  # tai nguyen kem theo (ffmpeg, font)
+    ROOT = Path.home() / "VideoFactory"          # du lieu: thu muc ~/VideoFactory (an toan Win & Mac)
+    ROOT.mkdir(parents=True, exist_ok=True)
 else:
     BUNDLE = Path(__file__).resolve().parent
     ROOT = BUNDLE
@@ -26,6 +27,13 @@ FFMPEG = str(BUNDLE / "bin" / _FF)
 FONT = str(BUNDLE / "bin" / "font.ttf")
 CACHE = ROOT / "cache"
 CACHE.mkdir(parents=True, exist_ok=True)
+
+# Khi dong goi tren Mac/Linux, dam bao ffmpeg co quyen chay
+if getattr(sys, "frozen", False) and os.name != "nt":
+    try:
+        os.chmod(FFMPEG, 0o755)
+    except OSError:
+        pass
 
 # Thong so chuan (video doc 9:16)
 W, H, FPS = 1080, 1920, 30

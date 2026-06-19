@@ -1,4 +1,4 @@
-name: Build Video Factory (Windows Portable)
+name: Build Video Factory (Windows + Mac)
 
 # Tu chay khi day code video-factory len, hoac bam chay tay trong tab Actions.
 on:
@@ -8,62 +8,86 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  # ====================== WINDOWS (.exe portable, zip) ======================
+  build-windows:
     runs-on: windows-latest
     defaults:
       run:
         working-directory: video-factory
     steps:
-      - name: Lay code
-        uses: actions/checkout@v4
-
-      - name: Cai Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Cai PyInstaller
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller
-
-      - name: Tai ffmpeg.exe (ban Windows)
+      - name: Tai ffmpeg.exe (Windows)
         run: |
           New-Item -ItemType Directory -Force -Path bin | Out-Null
           Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile ff.zip
           Expand-Archive ff.zip -DestinationPath ff -Force
           $exe = Get-ChildItem -Recurse ff -Filter ffmpeg.exe | Select-Object -First 1
           Copy-Item $exe.FullName bin/ffmpeg.exe -Force
-          Write-Host "ffmpeg.exe size:" (Get-Item bin/ffmpeg.exe).Length
-
       - name: Chuan bi font tieng Viet
         run: |
-          try {
-            Invoke-WebRequest -Uri "https://github.com/google/fonts/raw/main/ofl/bevietnampro/BeVietnamPro-SemiBold.ttf" -OutFile bin/font.ttf
-          } catch { Write-Host "Tai font that bai, dung Arial cua Windows" }
-          if (-not (Test-Path bin/font.ttf) -or (Get-Item bin/font.ttf).Length -lt 50000) {
-            Copy-Item C:\Windows\Fonts\arial.ttf bin/font.ttf -Force
-          }
-          Write-Host "font.ttf size:" (Get-Item bin/font.ttf).Length
-
-      - name: Dong goi bang PyInstaller (--onedir, portable)
+          try { Invoke-WebRequest -Uri "https://github.com/google/fonts/raw/main/ofl/bevietnampro/BeVietnamPro-SemiBold.ttf" -OutFile bin/font.ttf } catch { }
+          if (-not (Test-Path bin/font.ttf) -or (Get-Item bin/font.ttf).Length -lt 50000) { Copy-Item C:\Windows\Fonts\arial.ttf bin/font.ttf -Force }
+      - name: Dong goi (.exe portable)
         run: >
           pyinstaller --noconfirm --onedir --console --name VideoFactory
           --add-data "bin/ffmpeg.exe;bin"
           --add-data "bin/font.ttf;bin"
           --hidden-import cgi
           app.py
-
       - name: Them huong dan + nen zip
         run: |
           Copy-Item HUONG-DAN.md "dist/VideoFactory/HUONG-DAN.txt" -Force
-          "Bam dup VideoFactory.exe de chay. Trinh duyet se tu mo.`r`nDe tat: dong cua so mau den." | Out-File -Encoding utf8 "dist/VideoFactory/DOC-TRUOC-KHI-CHAY.txt"
+          "Bam dup VideoFactory.exe de chay. Giao dien se tu mo.`r`nDe tat: dong cua so mau den." | Out-File -Encoding utf8 "dist/VideoFactory/DOC-TRUOC-KHI-CHAY.txt"
           Compress-Archive -Path dist/VideoFactory -DestinationPath VideoFactory-Windows.zip -Force
-          Write-Host "Zip size:" (Get-Item VideoFactory-Windows.zip).Length
-
-      - name: Tai ket qua len (Artifact)
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: VideoFactory-Windows-Portable
           path: video-factory/VideoFactory-Windows.zip
+          if-no-files-found: error
+
+  # ====================== MAC (.app trong .dmg) ======================
+  build-mac:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: video-factory
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Cai PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+      - name: Tai ffmpeg (macOS arm64)
+        run: |
+          mkdir -p bin
+          curl -L -o bin/ffmpeg "https://github.com/eugeneware/ffmpeg-static/releases/download/b6.0/ffmpeg-darwin-arm64"
+          chmod +x bin/ffmpeg
+      - name: Chuan bi font tieng Viet
+        run: |
+          curl -L -o bin/font.ttf "https://github.com/google/fonts/raw/main/ofl/bevietnampro/BeVietnamPro-SemiBold.ttf" || true
+          if [ ! -s bin/font.ttf ] || [ "$(stat -f%z bin/font.ttf)" -lt 50000 ]; then cp "/System/Library/Fonts/Supplemental/Arial Unicode.ttf" bin/font.ttf; fi
+      - name: Dong goi (.app)
+        run: |
+          pyinstaller --noconfirm --windowed --name VideoFactory \
+            --add-data "bin/ffmpeg:bin" \
+            --add-data "bin/font.ttf:bin" \
+            --hidden-import cgi \
+            app.py
+      - name: Tao file .dmg
+        run: |
+          hdiutil create -volname "Video Factory" -srcfolder "dist/VideoFactory.app" -ov -format UDZO "VideoFactory-Mac.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VideoFactory-Mac-DMG
+          path: video-factory/VideoFactory-Mac.dmg
           if-no-files-found: error
