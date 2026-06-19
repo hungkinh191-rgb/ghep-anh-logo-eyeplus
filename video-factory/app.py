@@ -355,21 +355,33 @@ def open_as_app(url):
 
 def main():
     url = f"http://127.0.0.1:{PORT}"
-    print("=" * 52)
-    print("  VIDEO FACTORY dang chay!")
-    print(f"  Giao dien: {url}")
-    print("  >> DE TAT: dong cua so (mau den) nay lai. <<")
-    print("=" * 52)
+    # Chay web server o thread nen (giao dien la trang web noi bo)
     try:
-        open_as_app(url)
-    except Exception:
-        pass
-    try:
-        ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
+        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     except OSError:
-        print(f"\nLoi: cong {PORT} dang ban (co the app da mo san).")
-        print(f"Hay mo trinh duyet vao: {url}")
-        input("Nhan Enter de thoat...")
+        # Cong dang ban -> co the app da mo san; chi mo cua so tro toi no
+        server = None
+    if server:
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+
+    # Hien giao dien trong CUA SO APP RIENG (pywebview) - KHONG mo trinh duyet.
+    # Tren Windows dung thanh phan WebView2 co san cua Windows (khong phai trinh duyet Edge).
+    try:
+        import webview
+        webview.create_window("Video Factory - EyePlus", url, width=940, height=1020)
+        webview.start()
+        return  # dong cua so -> thoat app
+    except Exception as e:
+        print("Khong mo duoc cua so app rieng, chuyen sang trinh duyet:", e)
+
+    # Du phong: mo bang trinh duyet + giu tien trinh song
+    open_as_app(url)
+    import time
+    try:
+        while True:
+            time.sleep(3600)
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == "__main__":

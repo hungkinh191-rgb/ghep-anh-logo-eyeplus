@@ -1,6 +1,5 @@
 name: Build Video Factory (Windows + Mac)
 
-# Tu chay khi day code video-factory len, hoac bam chay tay trong tab Actions.
 on:
   push:
     branches: [ main, master ]
@@ -8,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ====================== WINDOWS (.exe portable, zip) ======================
+  # ============ WINDOWS: cua so app rieng (WebView2) + bo cai Setup.exe ============
   build-windows:
     runs-on: windows-latest
     defaults:
@@ -19,10 +18,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Cai PyInstaller
+      - name: Cai cong cu
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+          pip install pyinstaller pywebview pythonnet
       - name: Tai ffmpeg.exe (Windows)
         run: |
           New-Item -ItemType Directory -Force -Path bin | Out-Null
@@ -34,25 +33,27 @@ jobs:
         run: |
           try { Invoke-WebRequest -Uri "https://github.com/google/fonts/raw/main/ofl/bevietnampro/BeVietnamPro-SemiBold.ttf" -OutFile bin/font.ttf } catch { }
           if (-not (Test-Path bin/font.ttf) -or (Get-Item bin/font.ttf).Length -lt 50000) { Copy-Item C:\Windows\Fonts\arial.ttf bin/font.ttf -Force }
-      - name: Dong goi (.exe portable)
+      - name: Dong goi app (--windowed, nhung WebView2)
         run: >
-          pyinstaller --noconfirm --onedir --console --name VideoFactory
+          pyinstaller --noconfirm --onedir --windowed --name VideoFactory
           --add-data "bin/ffmpeg.exe;bin"
           --add-data "bin/font.ttf;bin"
+          --collect-all webview
+          --collect-all clr_loader
+          --copy-metadata pythonnet
           --hidden-import cgi
           app.py
-      - name: Them huong dan + nen zip
-        run: |
-          Copy-Item HUONG-DAN.md "dist/VideoFactory/HUONG-DAN.txt" -Force
-          "Bam dup VideoFactory.exe de chay. Giao dien se tu mo.`r`nDe tat: dong cua so mau den." | Out-File -Encoding utf8 "dist/VideoFactory/DOC-TRUOC-KHI-CHAY.txt"
-          Compress-Archive -Path dist/VideoFactory -DestinationPath VideoFactory-Windows.zip -Force
+      - name: Cai Inno Setup
+        run: choco install innosetup --no-progress -y
+      - name: Tao bo cai Setup.exe
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss'
       - uses: actions/upload-artifact@v4
         with:
-          name: VideoFactory-Windows-Portable
-          path: video-factory/VideoFactory-Windows.zip
+          name: VideoFactory-Windows-Setup
+          path: video-factory/installer_out/VideoFactory-Setup.exe
           if-no-files-found: error
 
-  # ====================== MAC (.app trong .dmg) ======================
+  # ============ MAC: cua so app rieng (WKWebView) trong .dmg ============
   build-mac:
     runs-on: macos-latest
     defaults:
@@ -63,10 +64,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Cai PyInstaller
+      - name: Cai cong cu
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+          pip install pyinstaller pywebview
       - name: Tai ffmpeg (macOS arm64)
         run: |
           mkdir -p bin
@@ -76,16 +77,16 @@ jobs:
         run: |
           curl -L -o bin/font.ttf "https://github.com/google/fonts/raw/main/ofl/bevietnampro/BeVietnamPro-SemiBold.ttf" || true
           if [ ! -s bin/font.ttf ] || [ "$(stat -f%z bin/font.ttf)" -lt 50000 ]; then cp "/System/Library/Fonts/Supplemental/Arial Unicode.ttf" bin/font.ttf; fi
-      - name: Dong goi (.app)
+      - name: Dong goi app (.app, WKWebView)
         run: |
           pyinstaller --noconfirm --windowed --name VideoFactory \
             --add-data "bin/ffmpeg:bin" \
             --add-data "bin/font.ttf:bin" \
+            --collect-all webview \
             --hidden-import cgi \
             app.py
       - name: Tao file .dmg
-        run: |
-          hdiutil create -volname "Video Factory" -srcfolder "dist/VideoFactory.app" -ov -format UDZO "VideoFactory-Mac.dmg"
+        run: hdiutil create -volname "Video Factory" -srcfolder "dist/VideoFactory.app" -ov -format UDZO "VideoFactory-Mac.dmg"
       - uses: actions/upload-artifact@v4
         with:
           name: VideoFactory-Mac-DMG

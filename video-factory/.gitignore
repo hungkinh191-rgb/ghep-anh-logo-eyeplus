@@ -6,8 +6,10 @@ cache/
 output/
 dist/
 build/
+installer_out/
 *.spec
 *.zip
+*.dmg
 ff/
 ff.zip
 
