@@ -104,7 +104,8 @@ def concat(clips, dst):
 # Cac kieu chuyen canh dep, dung cho che do "ngau nhien"
 RANDOM_TRANS = ["fade", "dissolve", "slideleft", "slideright", "slideup",
                 "slidedown", "circleopen", "circleclose", "wipeleft",
-                "wiperight", "smoothleft", "smoothright", "fadeblack"]
+                "wiperight", "smoothleft", "smoothright", "fadeblack",
+                "zoomin", "hblur"]
 
 
 def concat_xfade(clips, dst, transition="fade", dur=0.5, gpu=False):

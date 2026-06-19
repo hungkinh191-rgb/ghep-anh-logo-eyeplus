@@ -178,6 +178,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
       <option value="circleopen">Mở vòng tròn</option>
       <option value="wipeleft">Gạt ngang</option>
       <option value="pixelize">Vỡ hạt</option>
+      <option value="zoomin">Phóng to (Zoom/Whoosh) — gần Warp</option>
+      <option value="hblur">Nhoè mờ (Blur)</option>
+      <option value="squeezeh">Bóp ngang</option>
+      <option value="squeezev">Bóp dọc</option>
       <option value="random">🎲 Ngẫu nhiên (mỗi đoạn 1 kiểu)</option>
     </select></div>
   <div class="row"><label>Độ dài chuyển cảnh (giây)</label><input type="number" id="transdur" value="0.5" min="0.2" max="2" step="0.1"></div>
