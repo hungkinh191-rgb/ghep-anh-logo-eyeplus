@@ -101,6 +101,47 @@ def concat(clips, dst):
     return dst
 
 
+# Cac kieu chuyen canh dep, dung cho che do "ngau nhien"
+RANDOM_TRANS = ["fade", "dissolve", "slideleft", "slideright", "slideup",
+                "slidedown", "circleopen", "circleclose", "wipeleft",
+                "wiperight", "smoothleft", "smoothright", "fadeblack"]
+
+
+def concat_xfade(clips, dst, transition="fade", dur=0.5, gpu=False):
+    """Noi cac clip co HIEU UNG CHUYEN CANH (xfade) giua tung doan.
+    transition: ten 1 kieu (fade/dissolve/slideleft...) hoac 'random' (moi cut 1 kieu).
+    dur: do dai chuyen canh (giay). Phai re-encode (cham hon noi copy)."""
+    import random as _r
+    clips = list(clips)
+    if len(clips) == 1:
+        run(["-i", str(clips[0]), "-c", "copy", str(dst)])
+        return dst
+    durs = [probe(c)[0] for c in clips]
+    # do dai chuyen canh khong duoc dai hon nua doan ngan nhat
+    d = max(0.1, min(dur, min(durs) * 0.5))
+    inputs = []
+    for c in clips:
+        inputs += ["-i", str(c)]
+    vparts, aparts = [], []
+    vlab, alab = "0:v", "0:a"
+    running = durs[0]
+    for i in range(1, len(clips)):
+        t = _r.choice(RANDOM_TRANS) if transition == "random" else transition
+        offset = max(0.0, running - d)
+        vout, aout = f"vx{i}", f"ax{i}"
+        vparts.append(f"[{vlab}][{i}:v]xfade=transition={t}:duration={d:.3f}"
+                      f":offset={offset:.3f}[{vout}]")
+        aparts.append(f"[{alab}][{i}:a]acrossfade=d={d:.3f}[{aout}]")
+        vlab, alab = vout, aout
+        running = running + durs[i] - d
+    fc = ";".join(vparts + aparts)
+    args = inputs + ["-filter_complex", fc, "-map", f"[{vlab}]", "-map", f"[{alab}]"]
+    args += venc(gpu) + ["-r", str(FPS), "-c:a", "aac", "-ar", "48000",
+                         "-ac", "2", "-b:a", "128k", str(dst)]
+    run(args)
+    return dst
+
+
 # Vi tri chen (logo & text): bieu thuc x,y theo kich thuoc video
 _POS = {
     "top": "h*0.08", "center": "(h-text_h)/2", "bottom": "h*0.82",
@@ -225,12 +266,16 @@ def make_segment(full_norm, start, dur, gpu=False):
 
 
 def assemble(norm_clips, out, music=None, music_volume=0.8, keep_original=True,
-             logo=None, texts=None, gpu=False, **kw):
-    """Noi cac clip DA chuan hoa -> render (logo/text/nhac)."""
+             logo=None, texts=None, gpu=False, transition="none", trans_dur=0.5, **kw):
+    """Noi cac clip DA chuan hoa -> render (logo/text/nhac).
+    transition: 'none' = cat thang (nhanh); ten kieu hoac 'random' = co chuyen canh."""
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     tmp = CACHE / f"tmp_{out.stem}.mp4"
-    concat(norm_clips, tmp)
+    if transition and transition != "none" and len(norm_clips) > 1:
+        concat_xfade(norm_clips, tmp, transition, trans_dur, gpu=gpu)
+    else:
+        concat(norm_clips, tmp)
     render(tmp, out, music=music, music_volume=music_volume,
            keep_original=keep_original, logo=logo, texts=texts, gpu=gpu,
            **{k: v for k, v in kw.items()

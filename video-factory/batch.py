@@ -33,7 +33,8 @@ def produce_batch(pool_dir, out_dir, music_dir=None, count=20,
                   seed=None, progress=None,
                   mode="pool", hook_dir=None, cta_dir=None,
                   texts=None, text_pos="bottom", text_size=64, text_color="white",
-                  logo=None, gpu=False, bitrate="6M", random_segment=False):
+                  logo=None, gpu=False, bitrate="6M", random_segment=False,
+                  transition="none", trans_dur=0.5):
     """San xuat `count` video.
 
     mode             : "pool" (tron tu bodies) | "funnel" (Hook+Body+CTA)
@@ -121,7 +122,8 @@ def produce_batch(pool_dir, out_dir, music_dir=None, count=20,
                   "color": text_color}] if txt else None
         core.assemble(norm, out, music=music, music_volume=music_volume,
                       keep_original=keep_original, logo=logo, texts=tlist,
-                      gpu=gpu, bitrate=bitrate)
+                      gpu=gpu, bitrate=bitrate,
+                      transition=transition, trans_dur=trans_dur)
         return out
 
     results = []
@@ -156,6 +158,8 @@ if __name__ == "__main__":
     ap.add_argument("--logo", default=None)
     ap.add_argument("--gpu", action="store_true")
     ap.add_argument("--random-seg", action="store_true", help="cat doan ngau nhien khac nhau")
+    ap.add_argument("--transition", default="none", help="hieu ung chuyen canh: none/fade/dissolve/slideleft/random...")
+    ap.add_argument("--trans-dur", type=float, default=0.5, help="do dai chuyen canh (giay)")
     ap.add_argument("--no-music", action="store_true")
     a = ap.parse_args()
     produce_batch(
@@ -164,5 +168,6 @@ if __name__ == "__main__":
         workers=a.workers, mode=a.mode, hook_dir=a.hooks, cta_dir=a.ctas,
         texts=a.texts if Path(a.texts).is_file() else None,
         logo=a.logo, gpu=a.gpu, random_segment=a.random_seg,
+        transition=a.transition, trans_dur=a.trans_dur,
         progress=lambda d, t, m: print(f"[{d}/{t}] {m}"),
     )

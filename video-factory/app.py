@@ -64,6 +64,7 @@ def run_batch(o):
             text_pos=o["textpos"], text_size=o["textsize"],
             logo=str(LOGO) if (o["logo"] and LOGO.exists()) else None,
             gpu=o["gpu"], random_segment=o.get("randomseg", False),
+            transition=o.get("transition", "none"), trans_dur=o.get("transdur", 0.5),
             progress=lambda d, t, m: STATE.update(done=d, total=t, msg=m),
         )
         ok = True
@@ -165,6 +166,22 @@ button:disabled{opacity:.5;cursor:not-allowed}
   <div class="row"><label>Cắt mỗi clip còn … giây <span class="hint">(0 = giữ nguyên)</span></label><input type="number" id="cut" value="0" min="0" max="60" step="0.5"></div>
   <div class="row"><label>🎲 Cắt ngẫu nhiên đoạn khác nhau <span class="hint">(mỗi video lấy 1 khúc khác trong clip)</span></label><input type="checkbox" id="randomseg" checked></div>
   <hr style="border-color:#334155;width:100%">
+  <div class="row"><label>🎞️ Hiệu ứng chuyển cảnh giữa các đoạn</label>
+    <select id="transition">
+      <option value="none">Không (cắt thẳng — nhanh nhất)</option>
+      <option value="fade">Mờ dần</option>
+      <option value="fadeblack">Mờ qua đen (Black Fade)</option>
+      <option value="fadewhite">Lóe sáng (Glow / Flash)</option>
+      <option value="dissolve">Tan vào nhau</option>
+      <option value="slideleft">Trượt ngang</option>
+      <option value="slideup">Trượt lên</option>
+      <option value="circleopen">Mở vòng tròn</option>
+      <option value="wipeleft">Gạt ngang</option>
+      <option value="pixelize">Vỡ hạt</option>
+      <option value="random">🎲 Ngẫu nhiên (mỗi đoạn 1 kiểu)</option>
+    </select></div>
+  <div class="row"><label>Độ dài chuyển cảnh (giây)</label><input type="number" id="transdur" value="0.5" min="0.2" max="2" step="0.1"></div>
+  <hr style="border-color:#334155;width:100%">
   <div class="row"><label>🎵 Thêm nhạc nền</label><input type="checkbox" id="music" checked></div>
   <div class="row"><label>Giữ tiếng gốc của clip</label><input type="checkbox" id="keep" checked></div>
   <div class="row"><label>Âm lượng nhạc <span class="hint" id="volLbl">80%</span></label><input type="range" id="volume" min="0" max="100" value="80" oninput="volLbl.textContent=this.value+'%'"></div>
@@ -214,7 +231,8 @@ async function saveTexts(){await fetch('/api/texts',{method:'POST',body:$('texts
 async function clearInputs(){if(!confirm('Xóa hết clip/nhạc + logo trong nguồn vào? (file gốc trên máy bạn vẫn còn)'))return;
   await fetch('/api/clear?what=all',{method:'POST'});$('t_logo').textContent='—';refresh();}
 async function produce(){let o={mode:$('mode').value,count:+$('count').value,clips:+$('clips').value,
-  cut:+$('cut').value,randomseg:$('randomseg').checked,music:$('music').checked,keep:$('keep').checked,volume:$('volume').value/100,
+  cut:+$('cut').value,randomseg:$('randomseg').checked,transition:$('transition').value,transdur:+$('transdur').value,
+  music:$('music').checked,keep:$('keep').checked,volume:$('volume').value/100,
   text:$('text').checked,textpos:$('textpos').value,textsize:+$('textsize').value,
   logo:$('logo').checked,gpu:$('gpu').checked,workers:+$('workers').value,autoclear:$('autoclear').checked};
   $('go').disabled=true;await fetch('/api/produce',{method:'POST',body:JSON.stringify(o)});poll();}
