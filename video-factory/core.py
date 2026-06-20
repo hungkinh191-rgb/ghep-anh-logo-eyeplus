@@ -38,7 +38,8 @@ if getattr(sys, "frozen", False) and os.name != "nt":
 # Thong so chuan (video doc 9:16)
 W, H, FPS = 1080, 1920, 30
 VIDEO_EXTS = {".mp4", ".mov", ".m4v", ".avi", ".mkv", ".webm"}
-AUDIO_EXTS = {".mp3", ".m4a", ".aac", ".wav", ".flac", ".ogg"}
+AUDIO_EXTS = {".mp3", ".m4a", ".aac", ".wav", ".flac", ".ogg",
+              ".opus", ".wma", ".aif", ".aiff"}
 IMG_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
 
 

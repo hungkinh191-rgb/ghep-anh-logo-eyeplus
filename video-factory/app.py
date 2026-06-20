@@ -134,14 +134,18 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <div class="card">
   <div class="hd">① Nguồn vào <span class="hint">(kéo-thả file vào ô, hoặc bấm chọn)</span></div>
   <div class="grid">
-    <div class="up" data-dest="bodies">📹 <b>Clip nội dung</b> <span class="tag" id="t_bodies">0</span><br><span class="hint">kéo-thả hoặc bấm</span></div>
-    <div class="up" data-dest="hooks">🎯 <b>Hook</b> (mở đầu) <span class="tag" id="t_hooks">0</span><br><span class="hint">cho chế độ phễu</span></div>
-    <div class="up" data-dest="ctas">📣 <b>CTA</b> (kêu gọi) <span class="tag" id="t_ctas">0</span><br><span class="hint">cho chế độ phễu</span></div>
-    <div class="up" data-dest="music">🎵 <b>Nhạc nền</b> <span class="tag" id="t_music">0</span><br><span class="hint">mp3, m4a...</span></div>
-    <div class="up" data-dest="logo">🖼️ <b>Logo</b> <span class="tag" id="t_logo">—</span><br><span class="hint">png trong suốt</span></div>
-    <div class="up" data-dest="bodies2" style="display:flex;align-items:center;justify-content:center" onclick="event.stopPropagation();openF('bodies')">📂 <span class="hint">Mở thư mục nguồn</span></div>
+    <label class="up" data-dest="bodies">📹 <b>Clip nội dung</b> <span class="tag" id="t_bodies">0</span><br><span class="hint">bấm để chọn / kéo-thả</span>
+      <input type="file" accept="video/*,.mp4,.mov,.m4v,.avi,.mkv,.webm" multiple hidden onchange="upload('bodies',this.files);this.value=''"></label>
+    <label class="up" data-dest="hooks">🎯 <b>Hook</b> (mở đầu) <span class="tag" id="t_hooks">0</span><br><span class="hint">cho chế độ phễu</span>
+      <input type="file" accept="video/*,.mp4,.mov,.m4v,.avi,.mkv,.webm" multiple hidden onchange="upload('hooks',this.files);this.value=''"></label>
+    <label class="up" data-dest="ctas">📣 <b>CTA</b> (kêu gọi) <span class="tag" id="t_ctas">0</span><br><span class="hint">cho chế độ phễu</span>
+      <input type="file" accept="video/*,.mp4,.mov,.m4v,.avi,.mkv,.webm" multiple hidden onchange="upload('ctas',this.files);this.value=''"></label>
+    <label class="up" data-dest="music">🎵 <b>Nhạc nền</b> <span class="tag" id="t_music">0</span><br><span class="hint">bấm để chọn mp3, m4a...</span>
+      <input type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.flac,.ogg,.opus,.wma" multiple hidden onchange="upload('music',this.files);this.value=''"></label>
+    <label class="up" data-dest="logo">🖼️ <b>Logo</b> <span class="tag" id="t_logo">—</span><br><span class="hint">png trong suốt</span>
+      <input type="file" accept="image/*,.png,.jpg,.jpeg,.webp" hidden onchange="upload('logo',this.files);this.value=''"></label>
+    <div class="up" style="display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="openF('bodies')">📂 <span class="hint">Mở thư mục nguồn</span></div>
   </div>
-  <input type="file" id="picker" multiple hidden>
   <div class="row" style="margin-top:10px"><span class="hint">Làm mới số đếm</span>
     <div class="btns"><button class="ghost" onclick="clearInputs()">🗑️ Xóa nguồn vào</button>
       <button class="ghost" onclick="refresh()">⟳ Cập nhật</button></div></div>
@@ -215,15 +219,16 @@ async function refresh(){let s=await(await fetch('/api/status')).json();
   if(s.texts&&!$('texts').value)$('texts').value=s.texts;}
 function openF(w){fetch('/api/open?w='+w);}
 async function upload(dest,files){
-  if(!files.length)return; let fd=new FormData();
+  if(!files||!files.length)return; let fd=new FormData();
   for(const f of files)fd.append('file',f);
   $('msg').textContent='Đang tải '+files.length+' file lên...';
-  await fetch('/api/upload?dest='+dest,{method:'POST',body:fd});
-  $('msg').textContent='Đã tải lên xong.'; refresh();}
-let curDest='bodies';
+  try{let r=await(await fetch('/api/upload?dest='+dest,{method:'POST',body:fd})).json();
+    $('msg').textContent='Đã thêm '+ (r.saved||0) +' file.';}
+  catch(e){$('msg').textContent='Lỗi tải lên: '+e;}
+  refresh();}
+// Keo-tha (click da do <label> lo). Cho phep tha file vao tung o.
 document.querySelectorAll('.up[data-dest]').forEach(el=>{
-  const d=el.dataset.dest; if(d==='bodies2')return;
-  el.onclick=()=>{curDest=d;$('picker').click();};
+  const d=el.dataset.dest;
   el.ondragover=e=>{e.preventDefault();el.classList.add('drag');};
   el.ondragleave=()=>el.classList.remove('drag');
   el.ondrop=e=>{e.preventDefault();el.classList.remove('drag');upload(d,e.dataTransfer.files);};
